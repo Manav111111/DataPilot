@@ -8,7 +8,7 @@ export interface ModalProps {
   title: string;
   description?: string;
   children: React.ReactNode;
-  maxWidth?: 'sm' | 'md' | 'lg' | 'xl';
+  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl';
 }
 
 export function Modal({
@@ -40,6 +40,11 @@ export function Modal({
     md: 'max-w-md',
     lg: 'max-w-lg',
     xl: 'max-w-xl',
+    '2xl': 'max-w-2xl',
+    '3xl': 'max-w-3xl',
+    '4xl': 'max-w-4xl',
+    '5xl': 'max-w-5xl',
+    '6xl': 'max-w-6xl',
   };
 
   return (
@@ -53,7 +58,7 @@ export function Modal({
       {/* Modal Dialog */}
       <div
         className={cn(
-          'relative w-full rounded-xl bg-white p-6 shadow-2xl transition-all z-10 animate-in fade-in zoom-in-95 duration-150',
+          'relative w-full rounded-xl bg-white p-6 shadow-2xl transition-all z-10 max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150',
           maxWidths[maxWidth]
         )}
       >

@@ -23,6 +23,20 @@ class Settings(BaseSettings):
     POSTGRES_DB: str = "data_intelligence_db"
     DATABASE_URL: str = ""
 
+    # AI & LLM Provider Configuration
+    AI_PROVIDER: str = "gemini"  # "gemini", "groq", or "mock"
+    GEMINI_API_KEY: str = ""
+    GEMINI_MODEL: str = "gemini-1.5-flash"
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.3-70b-versatile"
+
+    # AI Planning Limits
+    AI_PLANNING_MAX_RETRIES: int = 2
+    AI_PLANNING_TIMEOUT_SECONDS: int = 60
+    AI_PLANNING_MAX_QUERIES: int = 15
+    AI_PLANNING_MAX_FIELDS: int = 40
+    AI_PLANNING_MAX_RECORDS: int = 10000
+
     # CORS
     BACKEND_CORS_ORIGINS: Union[List[str], str] = [
         "http://localhost:5173",

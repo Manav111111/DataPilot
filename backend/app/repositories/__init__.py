@@ -3,6 +3,7 @@ from app.repositories.user_repo import UserRepository
 from app.repositories.project_repo import ProjectRepository
 from app.repositories.dataset_repo import DatasetRepository
 from app.repositories.workflow_repo import WorkflowRepository
+from app.repositories.plan_repo import PlanRepository
 
 __all__ = [
     "BaseRepository",
@@ -10,4 +11,5 @@ __all__ = [
     "ProjectRepository",
     "DatasetRepository",
     "WorkflowRepository",
+    "PlanRepository",
 ]

@@ -34,3 +34,6 @@ class User(Base):
     workflow_runs = relationship(
         "WorkflowRun", back_populates="user", cascade="all, delete-orphan"
     )
+    collection_plans = relationship(
+        "CollectionPlan", back_populates="user", cascade="all, delete-orphan"
+    )

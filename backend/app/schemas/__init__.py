@@ -22,6 +22,20 @@ from app.schemas.workflow import (
     WorkflowRunResponse,
     WorkflowStatus,
 )
+from app.schemas.plan import (
+    PlanStatus,
+    FieldType,
+    RuleType,
+    FieldDefinition,
+    SearchQuery,
+    SourceRecommendation,
+    QualityRule,
+    CollectionPlanData,
+    GeneratePlanRequest,
+    UpdatePlanRequest,
+    RegeneratePlanRequest,
+    CollectionPlanResponse,
+)
 
 __all__ = [
     "MessageResponse",

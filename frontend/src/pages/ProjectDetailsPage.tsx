@@ -3,22 +3,26 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useProject, useDeleteProject } from '../hooks/useProjects';
 import { useDatasets, useDeleteDataset } from '../hooks/useDatasets';
 import { useWorkflows } from '../hooks/useWorkflows';
+import { useProjectPlans } from '../hooks/usePlans';
 import { StatusBadge } from '../components/common/StatusBadge';
 import { DatasetTable } from '../features/datasets/DatasetTable';
 import { CreateDatasetModal } from '../features/datasets/CreateDatasetModal';
 import { EditDatasetModal } from '../features/datasets/EditDatasetModal';
 import { DatasetDetailsModal } from '../features/datasets/DatasetDetailsModal';
 import { EditProjectModal } from '../features/projects/EditProjectModal';
+import { CreatePlanModal } from '../features/plans/CreatePlanModal';
+import { PlanCard } from '../features/plans/PlanCard';
+import { PlanViewer } from '../features/plans/PlanViewer';
 import { ConfirmDialog } from '../components/common/ConfirmDialog';
 import { WorkflowRunsTable } from '../features/dashboard/WorkflowRunsTable';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Spinner } from '../components/ui/Spinner';
 import { EmptyState } from '../components/ui/EmptyState';
 import { useToast } from '../components/ui/Toast';
-import { formatDate } from '../../lib/utils';
+import { formatDate } from '../lib/utils';
 import { Project } from '../types/project';
 import { Dataset } from '../types/dataset';
+import { CollectionPlan } from '../types/plan';
 import {
   ArrowLeft,
   Database,
@@ -27,7 +31,7 @@ import {
   Edit2,
   Trash2,
   Calendar,
-  Layers,
+  Sparkles,
 } from 'lucide-react';
 
 export function ProjectDetailsPage() {
@@ -35,10 +39,12 @@ export function ProjectDetailsPage() {
   const navigate = useNavigate();
   const { success, error: showError } = useToast();
 
-  const [activeTab, setActiveTab] = useState<'datasets' | 'workflows'>('datasets');
+  const [activeTab, setActiveTab] = useState<'plans' | 'datasets' | 'workflows'>('plans');
 
-  // Modals state
+  // Modals & review state
   const [createDatasetOpen, setCreateDatasetOpen] = useState(false);
+  const [createPlanOpen, setCreatePlanOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<CollectionPlan | null>(null);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [deletingProject, setDeletingProject] = useState<Project | null>(null);
   const [viewingDataset, setViewingDataset] = useState<Dataset | null>(null);
@@ -47,6 +53,7 @@ export function ProjectDetailsPage() {
 
   // Queries
   const { data: project, isLoading: projectLoading } = useProject(projectId);
+  const { data: plansData, isLoading: plansLoading, refetch: refetchPlans } = useProjectPlans(projectId);
   const { data: datasetsData, isLoading: datasetsLoading } = useDatasets({
     project_id: projectId,
     size: 50,
@@ -80,6 +87,12 @@ export function ProjectDetailsPage() {
     } catch (err: any) {
       showError(err.response?.data?.detail || 'Failed to delete dataset');
     }
+  };
+
+  const handlePlanGenerated = (newPlan: CollectionPlan) => {
+    refetchPlans();
+    setSelectedPlan(newPlan);
+    setActiveTab('plans');
   };
 
   if (projectLoading) {
@@ -139,7 +152,12 @@ export function ProjectDetailsPage() {
               </span>
               <span>•</span>
               <span className="flex items-center gap-1">
-                <Database className="w-3.5 h-3.5 text-indigo-500" />
+                <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
+                {plansData?.total ?? 0} AI Plans
+              </span>
+              <span>•</span>
+              <span className="flex items-center gap-1">
+                <Database className="w-3.5 h-3.5 text-blue-500" />
                 {project.dataset_count ?? 0} Datasets
               </span>
               <span>•</span>
@@ -151,7 +169,7 @@ export function ProjectDetailsPage() {
           </div>
 
           {/* Action buttons */}
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
             <Button
               variant="outline"
               size="sm"
@@ -169,12 +187,21 @@ export function ProjectDetailsPage() {
               Delete
             </Button>
             <Button
-              variant="primary"
+              variant="outline"
               size="sm"
               onClick={() => setCreateDatasetOpen(true)}
             >
               <Plus className="w-4 h-4 mr-1.5" />
               Add Dataset
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-sm"
+              onClick={() => setCreatePlanOpen(true)}
+            >
+              <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+              Create AI Plan
             </Button>
           </div>
         </div>
@@ -184,7 +211,24 @@ export function ProjectDetailsPage() {
       <div className="border-b border-slate-200">
         <nav className="flex space-x-6">
           <button
-            onClick={() => setActiveTab('datasets')}
+            onClick={() => {
+              setActiveTab('plans');
+              setSelectedPlan(null);
+            }}
+            className={`pb-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+              activeTab === 'plans'
+                ? 'border-indigo-600 text-indigo-600'
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <Sparkles className="w-4 h-4" />
+            AI Data Plans ({plansData?.total ?? 0})
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab('datasets');
+              setSelectedPlan(null);
+            }}
             className={`pb-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
               activeTab === 'datasets'
                 ? 'border-indigo-600 text-indigo-600'
@@ -195,7 +239,10 @@ export function ProjectDetailsPage() {
             Datasets ({datasetsData?.total ?? 0})
           </button>
           <button
-            onClick={() => setActiveTab('workflows')}
+            onClick={() => {
+              setActiveTab('workflows');
+              setSelectedPlan(null);
+            }}
             className={`pb-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
               activeTab === 'workflows'
                 ? 'border-indigo-600 text-indigo-600'
@@ -208,7 +255,79 @@ export function ProjectDetailsPage() {
         </nav>
       </div>
 
-      {/* Tab Contents */}
+      {/* Tab Contents: AI Plans */}
+      {activeTab === 'plans' && (
+        <div className="space-y-4">
+          {selectedPlan ? (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={() => setSelectedPlan(null)}
+                  className="inline-flex items-center text-xs font-semibold text-slate-600 hover:text-indigo-600 transition-colors"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5 mr-1" />
+                  Back to all AI Plans
+                </button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCreatePlanOpen(true)}
+                >
+                  <Plus className="w-3.5 h-3.5 mr-1" />
+                  New Plan
+                </Button>
+              </div>
+              <PlanViewer
+                plan={selectedPlan}
+                onClose={() => setSelectedPlan(null)}
+                onPlanUpdated={(updated) => setSelectedPlan(updated)}
+              />
+            </div>
+          ) : plansLoading ? (
+            <div className="py-12 flex justify-center">
+              <Spinner size="md" />
+            </div>
+          ) : !plansData?.items || plansData.items.length === 0 ? (
+            <EmptyState
+              icon={Sparkles}
+              title="No AI Data Plans created yet"
+              description="Describe what data you need in natural language. Our AI planner will construct structured schemas, queries, and extraction rules."
+              actionLabel="Create AI Data Plan"
+              onAction={() => setCreatePlanOpen(true)}
+              actionIcon={Plus}
+            />
+          ) : (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-slate-500">
+                  Showing <strong>{plansData.items.length}</strong> collection plan{plansData.items.length === 1 ? '' : 's'}
+                </p>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="bg-indigo-600 hover:bg-indigo-700"
+                  onClick={() => setCreatePlanOpen(true)}
+                >
+                  <Plus className="w-3.5 h-3.5 mr-1" />
+                  Create AI Plan
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {plansData.items.map((plan) => (
+                  <PlanCard
+                    key={plan.id}
+                    plan={plan}
+                    onOpenPlan={(p) => setSelectedPlan(p)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Tab Contents: Datasets */}
       {activeTab === 'datasets' && (
         <div className="space-y-4">
           {datasetsLoading ? (
@@ -235,6 +354,7 @@ export function ProjectDetailsPage() {
         </div>
       )}
 
+      {/* Tab Contents: Workflow Runs */}
       {activeTab === 'workflows' && (
         <div className="space-y-4">
           {workflowsLoading ? (
@@ -248,6 +368,13 @@ export function ProjectDetailsPage() {
       )}
 
       {/* Modals */}
+      <CreatePlanModal
+        isOpen={createPlanOpen}
+        onClose={() => setCreatePlanOpen(false)}
+        projectId={project.id}
+        onPlanGenerated={handlePlanGenerated}
+      />
+
       <CreateDatasetModal
         isOpen={createDatasetOpen}
         onClose={() => setCreateDatasetOpen(false)}

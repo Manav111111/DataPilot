@@ -9,6 +9,9 @@ from app.db.session import Base, get_db
 from app.main import app
 from app.core.security import create_access_token
 from app.models.user import User
+from app.core.config import settings
+
+settings.AI_PROVIDER = "mock"
 
 # In-memory SQLite async test database
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
