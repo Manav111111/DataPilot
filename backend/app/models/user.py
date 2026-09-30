@@ -37,3 +37,6 @@ class User(Base):
     collection_plans = relationship(
         "CollectionPlan", back_populates="user", cascade="all, delete-orphan"
     )
+    collection_jobs = relationship(
+        "CollectionJob", back_populates="user", cascade="all, delete-orphan"
+    )

@@ -33,6 +33,10 @@ class CollectionPlan(Base):
 
     user = relationship("User", back_populates="collection_plans")
     project = relationship("Project", back_populates="collection_plans")
+    collection_jobs = relationship(
+        "CollectionJob", back_populates="plan", cascade="all, delete-orphan"
+    )
+
 
     __table_args__ = (
         Index("ix_collection_plans_project_id", "project_id"),

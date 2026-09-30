@@ -33,8 +33,42 @@ class Dataset(Base):
 
     project = relationship("Project", back_populates="datasets")
     user = relationship("User", back_populates="datasets")
+    collection_jobs = relationship(
+        "CollectionJob", back_populates="dataset", cascade="all, delete-orphan"
+    )
+    records = relationship(
+        "DatasetRecord", back_populates="dataset", cascade="all, delete-orphan"
+    )
+    sources = relationship(
+        "DataSource", back_populates="dataset", cascade="all, delete-orphan"
+    )
+    quality_reports = relationship(
+        "DatasetQualityReport", back_populates="dataset", cascade="all, delete-orphan"
+    )
+    transformations = relationship(
+        "DatasetTransformation", back_populates="dataset", cascade="all, delete-orphan"
+    )
+    versions = relationship(
+        "DatasetVersion", back_populates="dataset", cascade="all, delete-orphan"
+    )
+    charts = relationship(
+        "DatasetChart", back_populates="dataset", cascade="all, delete-orphan"
+    )
+    merge_histories = relationship(
+        "DatasetMergeHistory", back_populates="dataset", cascade="all, delete-orphan"
+    )
+    exports = relationship(
+        "DatasetExport", back_populates="dataset", cascade="all, delete-orphan"
+    )
+    analysis_sessions = relationship(
+        "AnalysisSession", back_populates="dataset", cascade="all, delete-orphan"
+    )
+    analysis_reports = relationship(
+        "AnalysisReport", back_populates="dataset", cascade="all, delete-orphan"
+    )
 
     __table_args__ = (
         Index("ix_datasets_user_id_status", "user_id", "status"),
         Index("ix_datasets_project_id", "project_id"),
     )
+

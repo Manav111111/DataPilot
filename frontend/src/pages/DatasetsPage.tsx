@@ -13,7 +13,8 @@ import { Spinner } from '../components/ui/Spinner';
 import { Button } from '../components/ui/Button';
 import { useToast } from '../components/ui/Toast';
 import { Dataset } from '../types/dataset';
-import { Database, Plus, Filter } from 'lucide-react';
+import { Database, Plus, Filter, GitCompare } from 'lucide-react';
+import { DatasetComparisonModal } from '../features/datasets/DatasetComparisonModal';
 
 export function DatasetsPage() {
   const [page, setPage] = useState(1);
@@ -26,6 +27,7 @@ export function DatasetsPage() {
   const [viewingDataset, setViewingDataset] = useState<Dataset | null>(null);
   const [editingDataset, setEditingDataset] = useState<Dataset | null>(null);
   const [deletingDataset, setDeletingDataset] = useState<Dataset | null>(null);
+  const [isCompareOpen, setIsCompareOpen] = useState(false);
 
   // Queries
   const { data: projectsData } = useProjects({ size: 100 });
@@ -69,14 +71,27 @@ export function DatasetsPage() {
             Unified view of structured tables, rows, and data schemas across projects.
           </p>
         </div>
-        <Button
-          variant="primary"
-          size="md"
-          onClick={() => setCreateModalOpen(true)}
-        >
-          <Plus className="w-4 h-4 mr-1.5" />
-          Create Dataset
-        </Button>
+        <div className="flex items-center gap-2">
+          {data?.items && data.items.length >= 2 && (
+            <Button
+              variant="outline"
+              size="md"
+              onClick={() => setIsCompareOpen(true)}
+              className="gap-1.5 text-xs font-semibold"
+            >
+              <GitCompare className="w-4 h-4 text-indigo-600" />
+              Compare Datasets
+            </Button>
+          )}
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => setCreateModalOpen(true)}
+          >
+            <Plus className="w-4 h-4 mr-1.5" />
+            Create Dataset
+          </Button>
+        </div>
       </div>
 
       {/* Filter and Search Bar */}
@@ -182,6 +197,12 @@ export function DatasetsPage() {
         isOpen={!!viewingDataset}
         onClose={() => setViewingDataset(null)}
         onEdit={(d) => setEditingDataset(d)}
+      />
+
+      <DatasetComparisonModal
+        initialDatasetId={data?.items?.[0]?.id}
+        isOpen={isCompareOpen}
+        onClose={() => setIsCompareOpen(false)}
       />
 
       <ConfirmDialog

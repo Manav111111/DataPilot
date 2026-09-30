@@ -1,0 +1,57 @@
+[
+  {
+    "company_name": "Sarvam AI",
+    "website": "https://www.www.techcrunch.com",
+    "industry": "Verified Industry",
+    "location": "Bangalore, India",
+    "_provenance": {
+      "source_count": 2,
+      "validation_status": "valid",
+      "record_hash": null
+    }
+  },
+  {
+    "company_name": "Sarvam AI",
+    "website": "https://www.www.angel.co",
+    "industry": "Verified Industry",
+    "location": "Bangalore, India",
+    "_provenance": {
+      "source_count": 1,
+      "validation_status": "valid",
+      "record_hash": null
+    }
+  },
+  {
+    "company_name": "Sarvam AI",
+    "website": "https://www.www.linkedin.com",
+    "industry": "Verified Industry",
+    "location": "Bangalore, India",
+    "_provenance": {
+      "source_count": 2,
+      "validation_status": "valid",
+      "record_hash": null
+    }
+  },
+  {
+    "company_name": "Sarvam AI",
+    "website": "https://www.www.inc42.com",
+    "industry": "Verified Industry",
+    "location": "Bangalore, India",
+    "_provenance": {
+      "source_count": 2,
+      "validation_status": "valid",
+      "record_hash": null
+    }
+  },
+  {
+    "company_name": "Sarvam AI",
+    "website": "https://www.www.yourstory.com",
+    "industry": "Verified Industry",
+    "location": "Bangalore, India",
+    "_provenance": {
+      "source_count": 2,
+      "validation_status": "valid",
+      "record_hash": null
+    }
+  }
+]

@@ -4,6 +4,7 @@ import { useProject, useDeleteProject } from '../hooks/useProjects';
 import { useDatasets, useDeleteDataset } from '../hooks/useDatasets';
 import { useWorkflows } from '../hooks/useWorkflows';
 import { useProjectPlans } from '../hooks/usePlans';
+import { useProjectCollectionJobs } from '../hooks/useCollection';
 import { StatusBadge } from '../components/common/StatusBadge';
 import { DatasetTable } from '../features/datasets/DatasetTable';
 import { CreateDatasetModal } from '../features/datasets/CreateDatasetModal';
@@ -13,6 +14,7 @@ import { EditProjectModal } from '../features/projects/EditProjectModal';
 import { CreatePlanModal } from '../features/plans/CreatePlanModal';
 import { PlanCard } from '../features/plans/PlanCard';
 import { PlanViewer } from '../features/plans/PlanViewer';
+import { CollectionJobMonitor } from '../features/collection/CollectionJobMonitor';
 import { ConfirmDialog } from '../components/common/ConfirmDialog';
 import { WorkflowRunsTable } from '../features/dashboard/WorkflowRunsTable';
 import { Button } from '../components/ui/Button';
@@ -32,6 +34,8 @@ import {
   Trash2,
   Calendar,
   Sparkles,
+  Globe,
+  Radio,
 } from 'lucide-react';
 
 export function ProjectDetailsPage() {
@@ -39,12 +43,13 @@ export function ProjectDetailsPage() {
   const navigate = useNavigate();
   const { success, error: showError } = useToast();
 
-  const [activeTab, setActiveTab] = useState<'plans' | 'datasets' | 'workflows'>('plans');
+  const [activeTab, setActiveTab] = useState<'plans' | 'jobs' | 'datasets' | 'workflows'>('plans');
 
   // Modals & review state
   const [createDatasetOpen, setCreateDatasetOpen] = useState(false);
   const [createPlanOpen, setCreatePlanOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<CollectionPlan | null>(null);
+  const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [deletingProject, setDeletingProject] = useState<Project | null>(null);
   const [viewingDataset, setViewingDataset] = useState<Dataset | null>(null);
@@ -54,7 +59,8 @@ export function ProjectDetailsPage() {
   // Queries
   const { data: project, isLoading: projectLoading } = useProject(projectId);
   const { data: plansData, isLoading: plansLoading, refetch: refetchPlans } = useProjectPlans(projectId);
-  const { data: datasetsData, isLoading: datasetsLoading } = useDatasets({
+  const { data: jobsData, isLoading: jobsLoading, refetch: refetchJobs } = useProjectCollectionJobs(projectId);
+  const { data: datasetsData, isLoading: datasetsLoading, refetch: refetchDatasets } = useDatasets({
     project_id: projectId,
     size: 50,
   });
@@ -226,6 +232,20 @@ export function ProjectDetailsPage() {
           </button>
           <button
             onClick={() => {
+              setActiveTab('jobs');
+              setSelectedJobId(null);
+            }}
+            className={`pb-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+              activeTab === 'jobs'
+                ? 'border-indigo-600 text-indigo-600'
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <Globe className="w-4 h-4" />
+            Collection Jobs ({jobsData?.total ?? 0})
+          </button>
+          <button
+            onClick={() => {
               setActiveTab('datasets');
               setSelectedPlan(null);
             }}
@@ -281,6 +301,11 @@ export function ProjectDetailsPage() {
                 plan={selectedPlan}
                 onClose={() => setSelectedPlan(null)}
                 onPlanUpdated={(updated) => setSelectedPlan(updated)}
+                onStartCollection={(jobId) => {
+                  refetchJobs();
+                  setSelectedJobId(jobId);
+                  setActiveTab('jobs');
+                }}
               />
             </div>
           ) : plansLoading ? (
@@ -326,6 +351,119 @@ export function ProjectDetailsPage() {
           )}
         </div>
       )}
+
+      {/* Tab Contents: Collection Jobs */}
+      {activeTab === 'jobs' && (
+        <div className="space-y-4">
+          {selectedJobId ? (
+            <div className="space-y-4">
+              <button
+                onClick={() => setSelectedJobId(null)}
+                className="inline-flex items-center text-xs font-semibold text-slate-600 hover:text-indigo-600 transition-colors"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 mr-1" />
+                Back to all Collection Jobs
+              </button>
+              <CollectionJobMonitor
+                jobId={selectedJobId}
+                onViewDataset={(dsId) => {
+                  const ds = datasetsData?.items?.find((d) => d.id === dsId);
+                  if (ds) {
+                    setViewingDataset(ds);
+                  } else {
+                    refetchDatasets();
+                    setActiveTab('datasets');
+                  }
+                }}
+                onClose={() => setSelectedJobId(null)}
+              />
+            </div>
+          ) : jobsLoading ? (
+            <div className="py-12 flex justify-center">
+              <Spinner size="md" />
+            </div>
+          ) : !jobsData?.items || jobsData.items.length === 0 ? (
+            <EmptyState
+              icon={Globe}
+              title="No data collection jobs run yet"
+              description="Approve an AI Data Plan and click 'Start Data Collection' to search web sources and extract structured records."
+              actionLabel="View AI Data Plans"
+              onAction={() => setActiveTab('plans')}
+              actionIcon={Sparkles}
+            />
+          ) : (
+            <div className="space-y-4">
+              <div className="rounded-xl border border-slate-200/80 bg-white shadow-card overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr className="border-b border-slate-200 bg-slate-50 text-slate-600 font-semibold text-[11px] uppercase tracking-wider">
+                        <th className="py-3 px-4">Job ID</th>
+                        <th className="py-3 px-4">Status</th>
+                        <th className="py-3 px-4">Current Stage</th>
+                        <th className="py-3 px-4">Progress</th>
+                        <th className="py-3 px-4">Records Saved</th>
+                        <th className="py-3 px-4">Sources Crawled</th>
+                        <th className="py-3 px-4">Started</th>
+                        <th className="py-3 px-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 text-slate-700">
+                      {jobsData.items.map((job) => (
+                        <tr key={job.id} className="hover:bg-slate-50/70 transition-colors">
+                          <td className="py-3 px-4 font-mono text-[11px] font-semibold text-slate-900">
+                            {job.id.slice(0, 8)}...
+                          </td>
+                          <td className="py-3 px-4">
+                            <StatusBadge status={job.status} />
+                          </td>
+                          <td className="py-3 px-4 font-medium text-slate-800 capitalize">
+                            {job.current_stage.replace(/_/g, ' ')}
+                          </td>
+                          <td className="py-3 px-4">
+                            <div className="flex items-center gap-2">
+                              <div className="w-16 h-2 bg-slate-100 rounded-full overflow-hidden">
+                                <div
+                                  className="h-full bg-indigo-600 rounded-full"
+                                  style={{ width: `${job.progress_percentage}%` }}
+                                />
+                              </div>
+                              <span className="font-mono text-[11px] text-slate-500">
+                                {job.progress_percentage}%
+                              </span>
+                            </div>
+                          </td>
+                          <td className="py-3 px-4 font-semibold text-emerald-600">
+                            {job.records_saved} records
+                          </td>
+                          <td className="py-3 px-4 text-slate-600">
+                            {job.processed_sources} / {job.total_sources}
+                          </td>
+                          <td className="py-3 px-4 text-slate-400">
+                            {job.started_at ? formatDate(job.started_at) : formatDate(job.created_at)}
+                          </td>
+                          <td className="py-3 px-4 text-right">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setSelectedJobId(job.id)}
+                              className="text-xs font-semibold gap-1"
+                            >
+                              <Radio className="w-3 h-3 text-indigo-600" />
+                              Monitor
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
 
       {/* Tab Contents: Datasets */}
       {activeTab === 'datasets' && (

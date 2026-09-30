@@ -12,6 +12,8 @@ from app.models.user import User
 from app.core.config import settings
 
 settings.AI_PROVIDER = "mock"
+settings.TAVILY_API_KEY = "mock_tavily_key"
+settings.FIRECRAWL_API_KEY = "mock_firecrawl_key"
 
 # In-memory SQLite async test database
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"

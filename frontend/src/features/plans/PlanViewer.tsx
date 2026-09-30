@@ -12,6 +12,7 @@ import { SearchQueryEditor } from './SearchQueryEditor';
 import { SourceRecommendationPanel } from './SourceRecommendationPanel';
 import { QualityRulesPanel } from './QualityRulesPanel';
 import { ClarificationPanel } from './ClarificationPanel';
+import { StartCollectionModal } from '../collection/StartCollectionModal';
 import { ConfirmDialog } from '../../components/common/ConfirmDialog';
 import { Modal } from '../../components/ui/Modal';
 import { Textarea } from '../../components/ui/Textarea';
@@ -34,15 +35,22 @@ import {
   MapPin,
   Tag,
   Hash,
+  Play,
 } from 'lucide-react';
 
 interface PlanViewerProps {
   plan: CollectionPlan;
   onClose?: () => void;
   onPlanUpdated?: (plan: CollectionPlan) => void;
+  onStartCollection?: (jobId: string, datasetId: string) => void;
 }
 
-export function PlanViewer({ plan, onClose, onPlanUpdated }: PlanViewerProps) {
+export function PlanViewer({
+  plan,
+  onClose,
+  onPlanUpdated,
+  onStartCollection,
+}: PlanViewerProps) {
   const [currentPlan, setCurrentPlan] = useState<CollectionPlan>(plan);
   const [activeTab, setActiveTab] = useState<'fields' | 'queries' | 'sources' | 'quality' | 'steps'>('fields');
 
@@ -50,7 +58,9 @@ export function PlanViewer({ plan, onClose, onPlanUpdated }: PlanViewerProps) {
   const [approveConfirmOpen, setApproveConfirmOpen] = useState(false);
   const [rejectConfirmOpen, setRejectConfirmOpen] = useState(false);
   const [regenerateModalOpen, setRegenerateModalOpen] = useState(false);
+  const [startCollectionModalOpen, setStartCollectionModalOpen] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
+
 
   // Mutations
   const { mutateAsync: updatePlanMutation, isPending: isUpdating } = useUpdatePlan();
@@ -254,19 +264,40 @@ export function PlanViewer({ plan, onClose, onPlanUpdated }: PlanViewerProps) {
                 </Button>
               </>
             )}
+
+            {isApproved && (
+              <Button
+                variant="primary"
+                size="sm"
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-sm gap-1.5"
+                onClick={() => setStartCollectionModalOpen(true)}
+              >
+                <Play className="w-3.5 h-3.5 fill-current" />
+                Start Data Collection
+              </Button>
+            )}
           </div>
         </div>
 
         {/* Status Callout Banner */}
         {isApproved && (
-          <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex items-center justify-between">
+          <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
               <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
               <div>
-                <strong className="block font-semibold">Plan Approved for Pipeline Execution</strong>
-                <span>Data collection workflows and autonomous extraction will be executed in Phase 3.</span>
+                <strong className="block font-semibold">Plan Approved & Ready for Data Collection</strong>
+                <span>Search and extract real verified records across permitted sources with full provenance traceability.</span>
               </div>
             </div>
+            <Button
+              variant="primary"
+              size="sm"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5 text-xs flex-shrink-0"
+              onClick={() => setStartCollectionModalOpen(true)}
+            >
+              <Play className="w-3.5 h-3.5 fill-current" />
+              Start Collection
+            </Button>
           </div>
         )}
 
@@ -489,6 +520,16 @@ export function PlanViewer({ plan, onClose, onPlanUpdated }: PlanViewerProps) {
           </div>
         </div>
       </Modal>
+
+      <StartCollectionModal
+        plan={currentPlan}
+        isOpen={startCollectionModalOpen}
+        onClose={() => setStartCollectionModalOpen(false)}
+        onJobStarted={(jobId, datasetId) => {
+          onStartCollection?.(jobId, datasetId);
+        }}
+      />
     </div>
   );
 }
+

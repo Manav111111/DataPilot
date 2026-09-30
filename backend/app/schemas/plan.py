@@ -37,7 +37,7 @@ class RuleType(str, Enum):
 
 class FieldDefinition(BaseModel):
     name: str = Field(..., min_length=1, max_length=100)
-    label: str = Field(..., min_length=1, max_length=150)
+    label: Optional[str] = None
     type: FieldType = Field(default=FieldType.STRING)
     required: bool = Field(default=True)
     description: Optional[str] = None
@@ -45,17 +45,31 @@ class FieldDefinition(BaseModel):
     allow_missing: bool = Field(default=False)
     requires_source_evidence: bool = Field(default=True)
 
+    def model_post_init(self, __context: Any) -> None:
+        if not self.label:
+            self.label = self.name.replace("_", " ").title()
+
     model_config = ConfigDict(from_attributes=True)
 
 
 class SearchQuery(BaseModel):
     query: str = Field(..., min_length=2, max_length=300)
-    purpose: str = Field(..., min_length=2, max_length=300)
-    source_category: str = Field(..., min_length=2, max_length=100)
+    purpose: Optional[str] = None
+    source_category: Optional[str] = None
+    category: Optional[str] = None
     geography: Optional[str] = None
-    priority: int = Field(default=1, ge=1, le=5)
+    priority: Any = Field(default=1)
+
+    def model_post_init(self, __context: Any) -> None:
+        if not self.purpose:
+            self.purpose = f"Search for {self.query}"
+        if not self.source_category:
+            self.source_category = self.category or "web_search"
+        if not self.category:
+            self.category = self.source_category
 
     model_config = ConfigDict(from_attributes=True)
+
 
 
 class SourceRecommendation(BaseModel):

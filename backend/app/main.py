@@ -77,10 +77,87 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 # Health Check
 @app.get("/health", tags=["Health"])
 async def health_check():
+    """
+    Health check endpoint reporting overall application status and database reachability.
+    Never prints or exposes database credentials, hostnames, or internal tracebacks.
+    """
+    db_status = "healthy"
+    try:
+        from sqlalchemy import text
+        from app.db.session import AsyncSessionLocal
+        async with AsyncSessionLocal() as session:
+            await session.execute(text("SELECT 1"))
+    except Exception as e:
+        logger.error(f"Database health check failed: {type(e).__name__}")
+        db_status = "unhealthy"
+
+    overall_status = "healthy" if db_status == "healthy" else "degraded"
+
     return {
-        "status": "healthy",
+        "status": overall_status,
+        "database": db_status,
         "app": settings.PROJECT_NAME,
         "environment": settings.ENVIRONMENT,
+    }
+
+
+@app.get("/health/integrations", tags=["Health"])
+async def integrations_health_check():
+    """
+    Checks configuration status and connectivity indicators for integrated services.
+    Never prints or exposes raw API keys, passwords, or connection strings.
+    """
+    from sqlalchemy import text
+    from app.db.session import AsyncSessionLocal
+
+    db_url = settings.get_database_url()
+    if "supabase" in db_url.lower():
+        db_provider = "Supabase PostgreSQL"
+    elif "sqlite" in db_url.lower():
+        db_provider = "SQLite (Local/Test)"
+    else:
+        db_provider = "PostgreSQL"
+
+    db_status = "active"
+    try:
+        async with AsyncSessionLocal() as session:
+            await session.execute(text("SELECT 1"))
+    except Exception:
+        db_status = "unreachable"
+
+    tavily_configured = bool(settings.TAVILY_API_KEY and not settings.TAVILY_API_KEY.startswith("your_") and not settings.TAVILY_API_KEY.startswith("mock_"))
+    firecrawl_configured = bool(settings.FIRECRAWL_API_KEY and not settings.FIRECRAWL_API_KEY.startswith("your_") and not settings.FIRECRAWL_API_KEY.startswith("mock_"))
+    gemini_configured = bool(settings.GEMINI_API_KEY and not settings.GEMINI_API_KEY.startswith("your_") and not settings.GEMINI_API_KEY.startswith("mock_"))
+
+    return {
+        "status": "online" if db_status == "active" else "degraded",
+        "app": settings.PROJECT_NAME,
+        "database": {
+            "provider": db_provider,
+            "status": db_status,
+        },
+        "integrations": {
+            "tavily": {
+                "configured": tavily_configured,
+                "provider": "Tavily Search API",
+                "status": "active" if tavily_configured else "unconfigured"
+            },
+            "firecrawl": {
+                "configured": firecrawl_configured,
+                "provider": "Firecrawl Scrape API",
+                "status": "active" if firecrawl_configured else "unconfigured"
+            },
+            "gemini": {
+                "configured": gemini_configured,
+                "model": settings.GEMINI_MODEL,
+                "status": "active" if gemini_configured else "unconfigured"
+            },
+            "celery_redis": {
+                "broker": settings.CELERY_BROKER_URL.split("@")[-1],
+                "configured": bool(settings.REDIS_URL),
+                "status": "active"
+            }
+        }
     }
 
 

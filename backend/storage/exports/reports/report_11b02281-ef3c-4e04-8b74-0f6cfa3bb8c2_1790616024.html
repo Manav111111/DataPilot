@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q3 Market Summary - DataPilot Report</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #eef2ff;
+            --slate-900: #0f172a;
+            --slate-700: #334155;
+            --slate-500: #64748b;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --border: #e2e8f0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--slate-50);
+            color: var(--slate-900);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .header {
+            border-bottom: 2px solid var(--slate-100);
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+        }
+        .logo {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin: 0 0 8px 0;
+            color: var(--slate-900);
+        }
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .meta-item {
+            background: var(--slate-50);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .meta-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--slate-500);
+            font-weight: 600;
+        }
+        .meta-val {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-top: 2px;
+        }
+        section {
+            margin-bottom: 40px;
+        }
+        h2 {
+            font-size: 18px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+        }
+        .insight-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 14px;
+            transition: transform 0.2s;
+        }
+        .badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 3px 8px;
+            border-radius: 100px;
+            margin-bottom: 6px;
+        }
+        .insight-card h3 {
+            margin: 0 0 6px 0;
+            font-size: 15px;
+            font-weight: 700;
+        }
+        .insight-card p {
+            margin: 0 0 8px 0;
+            font-size: 13px;
+            color: var(--slate-700);
+        }
+        .method-tag {
+            font-size: 11px;
+            color: var(--slate-500);
+            font-family: monospace;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        .data-table th, .data-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        .data-table th {
+            background-color: var(--slate-50);
+            font-weight: 600;
+            color: var(--slate-700);
+        }
+        .corr-list {
+            font-size: 13px;
+            padding-left: 20px;
+            color: var(--slate-700);
+        }
+        .corr-list li {
+            margin-bottom: 6px;
+        }
+        .notes-box {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 13px;
+            color: #92400e;
+        }
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            color: var(--slate-500);
+            margin-top: 40px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">DataPilot AI Intelligence</div>
+            <h1>Q3 Market Summary</h1>
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <div class="meta-label">Dataset</div>
+                    <div class="meta-val">LLM Startups 2026</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Dataset Version</div>
+                    <div class="meta-val">v1</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Total Records</div>
+                    <div class="meta-val">3</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Generated Date</div>
+                    <div class="meta-val">September 28, 2026 - 17:20 UTC</div>
+                </div>
+            </div>
+        </div>
+
+        
+        <section>
+            <h2>Custom Notes</h2>
+            <div class="notes-box">All figures verified.</div>
+        </section>
+        
+
+        <section>
+            <h2>Key Automated Insights</h2>
+            
+            <div class="insight-card">
+                <div class="badge">OVERVIEW</div>
+                <h3>Dataset Scale & Health: 3 Records Across 3 Columns</h3>
+                <p>The 'LLM Startups 2026' dataset contains 3 records and 3 columns with an overall data completeness score of 100.0%.</p>
+                <div class="method-tag">Method: descriptive_scale</div>
+            </div>
+            
+            <div class="insight-card">
+                <div class="badge">EXTREMES</div>
+                <h3>Highest & Lowest Valuation</h3>
+                <p>'valuation' averages 34.8333 (median 18.0), spanning from a minimum of 0.5 to a peak of 86.0.</p>
+                <div class="method-tag">Method: numerical_extremes</div>
+            </div>
+            
+            <div class="insight-card">
+                <div class="badge">CATEGORICAL</div>
+                <h3>Dominant Category in City: 'San Francisco'</h3>
+                <p>'San Francisco' represents the largest segment in 'city' with 2 records (66.7% of total records).</p>
+                <div class="method-tag">Method: frequency_distribution</div>
+            </div>
+            
+        </section>
+
+        <section>
+            <h2>Descriptive Statistics</h2>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Column</th>
+                        <th>Count</th>
+                        <th>Mean</th>
+                        <th>Std Dev</th>
+                        <th>Min</th>
+                        <th>Median</th>
+                        <th>Max</th>
+                        <th>Missing</th>
+                    </tr>
+                </thead>
+                <tbody>
+            
+                    <tr>
+                        <td><strong>valuation</strong></td>
+                        <td>3</td>
+                        <td>34.8333</td>
+                        <td>45.1673</td>
+                        <td>0.5</td>
+                        <td>18.0</td>
+                        <td>86.0</td>
+                        <td>0</td>
+                    </tr>
+                </tbody></table>
+        </section>
+
+        <section>
+            <h2>Top Correlation Relationships</h2>
+            <p class='empty-text'>Insufficient numeric pairs for correlation analysis.</p>
+        </section>
+
+        <div class="footer">
+            Generated autonomously by <strong>DataPilot AI Engine</strong> &bull; All calculations verified via Pandas &bull; Zero Hallucination Guarantee
+        </div>
+    </div>
+</body>
+</html>

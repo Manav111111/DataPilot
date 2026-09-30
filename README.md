@@ -1,34 +1,62 @@
-# AI-Powered Data Intelligence Platform (Phase 1 & Phase 2)
+# DataPilot — AI-Powered Data Intelligence Platform (Phases 1, 2, 3, 4 & 5)
 
-A full-stack, enterprise-grade AI-Powered Data Intelligence Platform. The platform converts natural-language data collection requests into structured, reviewable, editable data collection plans using multi-step AI reasoning graphs (LangGraph), while maintaining projects, datasets, workflows, and strict multi-tenant isolation.
+A full-stack, enterprise-grade AI-Powered Data Intelligence Platform. The platform converts natural-language data collection requests into structured, reviewable, editable data collection plans using multi-step AI reasoning graphs (LangGraph), executes autonomous web data collection with source-backed provenance using Tavily, Firecrawl, Celery, Redis, and LLM structured extraction, provides comprehensive **Data Quality Profiling, Interactive Cleaning, Safe Transformations, Visual Analytics, Duplicate Merging, CSV/Excel/JSON Exports, Dataset Versioning**, and delivers **AI-Powered Natural-Language Dataset Chat, Deterministic Pandas Analytical Engine, Automated Multi-Dimensional Auto-Insights, Statistical Profiling, Dynamic Inline Visualizations, and Standalone Executive Report Builder**.
 
 ---
 
-## 🚀 What's New in Phase 2: AI Planning Engine
+## 🚀 What's New in Phase 5: AI Insights & Intelligent Data Analysis
 
-Phase 2 introduces an intelligent planning layer that bridges user natural language prompts and structured data extraction blueprints:
+Phase 5 transforms DataPilot into a full-scale AI data analysis workspace where users can query, analyze, and generate comprehensive intelligence reports from their collected datasets using natural language:
 
-1. **Multi-Step AI Planning Graph (LangGraph)**:
-   - **Request Understanding Node**: Identifies entity type, geographic scope, target record count, and detects ambiguity.
-   - **Field Schema Generation Node**: Infers clean typed field definitions (`string`, `number`, `url`, `date`, `boolean`, `email`, `phone`, `array`), required flags, and validation rules.
-   - **Search Strategy Node**: Generates multi-angle keyword, dork, and filtered search queries categorized by intent (`broad`, `filtered`, `deep_dive`, `verification`) with priority levels (`high`, `medium`, `low`).
-   - **Source Recommendation Node**: Suggests domain-specific data sources, rationale, expected fields, and collection limitations.
-   - **Quality & Deduplication Rules Node**: Configures exact and fuzzy deduplication keys, null value tolerances, format regexes, and validation checks.
-   - **Plan Assembly & Clarification Node**: Combines components into a single structured schema. If the prompt is ambiguous, marks status as `needs_clarification` and attaches targeted questions.
+1. **AI-Powered Dataset Chat & Natural Language Querying**:
+   - Conversational analyst assistant integrated directly into dataset workspaces.
+   - Converts natural-language user inquiries into structured analytical plans without ever inventing data, metrics, or conclusions.
+   - Real-time execution against actual stored PostgreSQL dataset records using Pandas.
+   - Dynamic inline rendering of verified result tables, analytical explanations, and responsive charts.
+   - Smart suggested prompt chips tailored dynamically to dataset schema and data types.
+   - Session history preservation, reset capabilities, and dataset version tracking.
 
-2. **Multi-LLM Provider Architecture**:
-   - **Google Gemini** (`gemini-1.5-pro` / `gemini-1.5-flash`) via `google-generativeai` with structured JSON output modes.
-   - **Groq** (`llama-3.3-70b-versatile` / `mixtral-8x7b-32768`) via `groq` SDK for ultra-fast planning latency.
-   - **Deterministic Mock Provider**: Zero-config local fallback for offline development, CI/CD, and fast deterministic unit testing.
-   - Dynamic key detection (`AIza...` for Gemini, `gsk_...` for Groq) with automatic fallback.
+2. **Deterministic Analytical Query Engine (Zero-Hallucination & Safe Execution)**:
+   - Strict allowlist-based execution architecture that **never uses `eval()` or `exec()`**.
+   - Supported analytical operations:
+     - `count`, `distinct_count`, `sum`, `mean`, `median`, `min`, `max` aggregations.
+     - Multi-column `group_by` with metric aggregations.
+     - `sort_limit` (e.g. "Top 10 highest revenue companies", "Lowest price products").
+     - Multi-condition safe `filter` expressions (`==`, `!=`, `>`, `<`, `>=`, `<=`, `contains`, `is_null`, `is_not_null`).
+     - `outlier_detection` using standard statistical Interquartile Range (IQR, 1.5 * IQR bounds).
+     - `correlation` analysis (Pearson linear correlation coefficient).
+     - `distribution` frequency analysis.
+     - `missing_analysis` for completeness audits.
+   - Plan validation ensuring column existence, type safety, operation limits, and tenant data protection.
 
-3. **Interactive Plan Review & Customization UI**:
-   - **Natural Language Prompt Modal**: Includes pre-built prompt templates, target record count selectors, and step-by-step generation animations.
-   - **Visual Field Builder**: Add, remove, reorder, and edit field names, types, descriptions, sample values, and required toggles.
-   - **Search Query Editor**: Add custom search queries, modify search categories, and adjust query priorities.
-   - **Interactive Clarification System**: Answer AI-generated clarifying questions to automatically re-tune the plan.
-   - **Plan Regeneration with Feedback**: Submit natural language feedback to iteratively refine the blueprint before execution.
-   - **Strict Approval Lifecycle**: Plans can be reviewed, edited, approved (`approved`), or rejected (`rejected`). Approval is safely blocked if clarifying questions remain unanswered.
+3. **Automated Multi-Dimensional Insights ("Auto Insights")**:
+   - One-click automatic analytical scanning across multiple dimensions:
+     - **Dataset Overview**: Total records, active columns, and overall data profile.
+     - **Numerical Extremes**: Top & bottom extrema for numeric metrics.
+     - **Categorical Distributions**: Dominant categories and concentration ratios.
+     - **Statistical Outliers**: Anomaly detection highlighting extreme values and IQR boundaries.
+     - **Correlations**: Notable linear associations with plain-language interpretations.
+     - **Data Quality Alerts**: Missing value warnings and null-ratio flags.
+   - Each insight card includes category badge, methodology explanation, supporting numerical evidence, and suggested follow-up questions.
+
+4. **Statistical Analysis Module**:
+   - Deep numeric profiling: `count`, `mean`, `std`, `min`, `25th percentile (Q1)`, `median (Q2)`, `75th percentile (Q3)`, `max`, `null_count`.
+   - Full pairwise Pearson correlation matrix for numerical features.
+   - Distribution metrics and statistical outlier boundary calculation.
+
+5. **AI Chart Recommendations & Inline Visualizations**:
+   - Automatically recommends and renders the optimal visualization for each query:
+     - **Bar Charts**: Categorical rankings and group comparisons.
+     - **Line Charts**: Chronological trends and sequential metrics.
+     - **Area Charts**: Cumulative distributions and continuous metrics.
+     - **Pie Charts**: Segment proportions and category shares.
+     - **Histograms & Scatter Plots**: Distribution bins and relationship mapping.
+   - Powered by Recharts with custom tooltips, legends, and responsive container scaling.
+
+6. **Analysis Report Builder & Export**:
+   - Generates standalone, responsive, styled executive HTML intelligence reports.
+   - Reports include dataset version, executive summary, automated multi-dimensional insights, descriptive statistics tables, correlation matrices, outlier analysis, methodology notes, and custom user observations.
+   - Secure download and local storage with tenant-isolated access controls.
 
 ---
 
@@ -39,27 +67,33 @@ Phase 2 introduces an intelligent planning layer that bridges user natural langu
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS with custom SaaS light design system
 - **Routing**: React Router v6 with public and protected routes
-- **Server State**: TanStack Query (React Query) with optimistic cache invalidations
-- **Form Handling**: React Hook Form with Zod schema validation
+- **Server State**: TanStack Query (React Query) with optimistic cache invalidations & live polling
+- **Visualizations**: Recharts for dynamic charts, histograms, quality gauges, and AI chat visualizations
+- **Tables**: TanStack Table for dynamic schema rendering and inline editing
+- **Markdown**: React-Markdown for AI chat responses and formatting
 - **Icons**: Lucide React
 - **HTTP Client**: Centralized Axios client with JWT interceptor & credentials
 
 ### Backend
 - **Framework**: Python 3.11+ with FastAPI
-- **AI / Agentic Graph**: LangGraph (`StateGraph`), LangChain Core
-- **LLM Providers**: Google Gemini SDK (`google-generativeai`), Groq SDK (`groq`), Mock provider
-- **Validation**: Pydantic v2 with strict schemas and `ConfigDict`
+- **Data Engineering & Analytics**: Pandas, NumPy, openpyxl
+- **AI Query Planning & Insights**: Google Gemini SDK (`google-generativeai`), Groq SDK (`groq`), Deterministic Mock provider
+- **AI Planning Graph**: LangGraph (`StateGraph`), LangChain Core
+- **Search Adapter**: Tavily Search API client
+- **Page Extractor**: Firecrawl API client + SSRF-safe URL sanitizer
+- **Background Jobs**: Celery + Redis message broker & result backend
+- **Validation & Deduplication**: Pydantic v2 with strict schemas + SHA256 deterministic hashing
 - **ORM & Database**: SQLAlchemy 2.0 (Async) + PostgreSQL (with SQLite async support for testing)
-- **Migrations**: Alembic with auto-discovery and versioned schema history
-- **Security & Auth**: Argon2 password hashing (`argon2-cffi`), JWT bearer token authentication, secure cookie handling
-- **Testing**: Pytest + pytest-asyncio + HTTPX AsyncClient (25 automated integration tests)
+- **Migrations**: Alembic with auto-discovery and versioned schema history (Migrations 001 - 005)
+- **Security & Auth**: Argon2id password hashing (`argon2-cffi`), JWT bearer token authentication
+- **Testing**: Pytest + pytest-asyncio + HTTPX AsyncClient (**48 automated integration tests**)
 
 ---
 
 ## 📁 Monorepo Project Structure
 
 ```
-data-intelligence-platform/
+CodeCubicals/
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
@@ -67,15 +101,21 @@ data-intelligence-platform/
 │   │   │   ├── layout/          # AppLayout, Navbar, Sidebar, ProtectedRoute, PublicRoute
 │   │   │   └── ui/              # Button, Input, Textarea, Select, Card, Modal, Badge, Spinner, EmptyState, Toast
 │   │   ├── features/
+│   │   │   ├── analysis/        # Phase 5 AI Insights & Reports UI
+│   │   │   │   ├── DatasetInsightsTab.tsx  # Conversational Analyst Chat, Auto-Insights & Statistics Modals
+│   │   │   │   └── DatasetReportsTab.tsx   # Executive Intelligence Reports & Standalone HTML Downloader
 │   │   │   ├── auth/            # LoginForm, RegisterForm
 │   │   │   ├── dashboard/       # RecentProjectsList, RecentDatasetsList, WorkflowRunsTable
 │   │   │   ├── projects/        # ProjectCard, CreateProjectModal, EditProjectModal
-│   │   │   ├── datasets/        # DatasetTable, CreateDatasetModal, EditDatasetModal, DatasetDetailsModal
-│   │   │   └── plans/           # CreatePlanModal, PlanViewer, PlanCard, EditableFieldBuilder, SearchQueryEditor, SourceRecommendationPanel, QualityRulesPanel, ClarificationPanel
-│   │   ├── hooks/               # useAuth, useProjects, useDatasets, useWorkflows, usePlans, useDashboard
+│   │   │   ├── datasets/        # DatasetTable, DatasetDetailsModal, DatasetQualityTab, DataCleaningTab,
+│   │   │   │                    # DataTransformationsTab, DuplicateResolverTab, DatasetAnalyticsTab,
+│   │   │   │                    # VersionHistoryTab, ExportCenterModal, DatasetComparisonModal
+│   │   │   ├── plans/           # CreatePlanModal, PlanViewer, PlanCard, EditableFieldBuilder, SearchQueryEditor
+│   │   │   └── collection/      # StartCollectionModal, CollectionJobMonitor, DatasetRecordsTable, RecordProvenanceDrawer, DatasetSourcesList, DatasetOverviewCard
+│   │   ├── hooks/               # useAuth, useProjects, useDatasets, usePlans, useCollection, useDatasetManagement, useAnalysis
 │   │   ├── lib/                 # axios.ts, utils.ts
-│   │   ├── services/            # authService, projectService, datasetService, workflowService, planService, dashboardService
-│   │   ├── types/               # auth, project, dataset, workflow, plan, api
+│   │   ├── services/            # authService, projectService, datasetService, planService, collectionService, datasetManagementService, analysisService
+│   │   ├── types/               # auth, project, dataset, plan, collection, dataset_management, analysis
 │   │   ├── pages/               # Login, Register, Dashboard, Projects, ProjectDetails, Datasets, Settings, NotFound
 │   │   ├── App.tsx
 │   │   ├── main.tsx
@@ -86,21 +126,46 @@ data-intelligence-platform/
 │   └── vite.config.ts
 ├── backend/
 │   ├── app/
+│   │   ├── analysis/            # Phase 5 AI Analytics & Query Engines
+│   │   │   ├── query_planner.py    # Gemini NLP -> Structured Analytical Query Plan Model
+│   │   │   ├── query_validator.py  # Strict Operation & Column Whitelist Validation
+│   │   │   ├── query_executor.py   # Pure Pandas Analytical Query Execution & Chart Formatting
+│   │   │   ├── insight_service.py  # Automated Multi-Dimensional Insight Generation
+│   │   │   ├── statistics_service.py # Descriptive Stats, Pearson Correlations, IQR Outliers
+│   │   │   └── report_service.py   # Standalone Styled HTML Report Generator
+│   │   ├── datasets/            # Phase 4 Data Intelligence Core Engines
+│   │   │   ├── profiling/       # profiler.py, quality_scorer.py
+│   │   │   ├── cleaning/        # cleaning_service.py
+│   │   │   ├── transformations/ # transformer.py (Safe AST Expression Evaluator)
+│   │   │   ├── duplicates/      # dedup_resolver.py
+│   │   │   ├── analytics/       # analytics_service.py
+│   │   │   ├── comparison/      # comparator.py
+│   │   │   └── export/          # export_service.py (CSV/XLSX/JSON + Formula Sanitization)
 │   │   ├── ai/
 │   │   │   ├── graphs/          # planning_graph.py (LangGraph 6-node StateGraph)
 │   │   │   └── providers/       # base.py, gemini.py, groq.py, mock.py, __init__.py (Factory)
+│   │   ├── collection/
+│   │   │   ├── search/          # tavily_client.py (Tavily search adapter)
+│   │   │   ├── extraction/      # firecrawl_client.py, structured_extractor.py
+│   │   │   ├── processing/      # validator.py, deduplicator.py
+│   │   │   ├── security/        # url_validator.py (SSRF protection)
+│   │   │   ├── coordinator.py   # CollectionJobCoordinator (8-stage pipeline)
+│   │   │   └── tasks.py         # Celery background tasks
 │   │   ├── api/
 │   │   │   ├── deps.py          # FastAPI auth & DB dependency injection
-│   │   │   └── routes/          # auth, projects, datasets, plans, workflows, dashboard
-│   │   ├── core/                # config, security (Argon2 + JWT), exceptions
+│   │   │   └── routes/          # auth, projects, datasets, plans, workflows, collection, dataset_management, analysis, dashboard
+│   │   ├── core/                # config, celery_app, security (Argon2 + JWT), exceptions
 │   │   ├── db/                  # session.py (AsyncSession), base.py
-│   │   ├── models/              # User, Project, Dataset, CollectionPlan, WorkflowRun (SQLAlchemy 2.0)
-│   │   ├── repositories/        # UserRepository, ProjectRepository, DatasetRepository, PlanRepository, WorkflowRepository
-│   │   ├── schemas/             # Pydantic v2 schemas for all models, plans & DTOs
-│   │   ├── services/            # AuthService, ProjectService, DatasetService, PlanService, WorkflowService
+│   │   ├── models/              # User, Project, Dataset, CollectionPlan, CollectionJob, DatasetRecord, DataSource,
+│   │   │                        # RecordSource, DatasetQualityReport, DatasetTransformation, DatasetVersion,
+│   │   │                        # DatasetChart, DatasetMergeHistory, DatasetExport,
+│   │   │                        # AnalysisSession, AnalysisMessage, AnalysisResult, AnalysisReport
+│   │   ├── repositories/        # UserRepository, ProjectRepository, DatasetRepository, PlanRepository, CollectionRepository, DatasetManagementRepository, AnalysisRepository
+│   │   ├── schemas/             # Pydantic v2 schemas for all models, plans, jobs, quality, cleaning, transformations, exports, analysis
+│   │   ├── services/            # AuthService, ProjectService, DatasetService, PlanService, CollectionService, DatasetManagementService, AnalysisService
 │   │   └── main.py              # FastAPI app lifecycle & router integration
-│   ├── alembic/                 # Migration scripts (001_initial_schema, 002_collection_plans)
-│   ├── tests/                   # Conftest & 25 comprehensive pytest async tests
+│   ├── alembic/                 # Migration scripts (001_initial_schema to 005_ai_insights_and_analysis)
+│   ├── tests/                   # Conftest & 48 comprehensive pytest async integration & unit tests
 │   ├── alembic.ini
 │   ├── pytest.ini
 │   ├── requirements.txt
@@ -115,53 +180,64 @@ data-intelligence-platform/
 
 ## ⚙️ Environment Variables
 
-Copy `.env.example` to `.env` in the root:
+Key configuration parameters (see `.env.example`):
 
-```bash
-cp .env.example .env
-```
-
-Key environment configuration:
 | Variable | Description | Default |
 |---|---|---|
 | `ENVIRONMENT` | Runtime environment (`development`, `production`) | `development` |
-| `DEBUG` | Debug mode | `True` |
-| `SECRET_KEY` | Secret key for JWT encoding/decoding | `supersecretkey_change_in_production...` |
-| `ALGORITHM` | JWT signing algorithm | `HS256` |
-| `ACCESS_TOKEN_EXPIRE_MINUTES` | JWT token expiration time | `1440` (24h) |
-| `POSTGRES_SERVER` | PostgreSQL host | `localhost` (or `postgres` in Docker) |
-| `POSTGRES_PORT` | PostgreSQL port | `5432` |
-| `POSTGRES_USER` | PostgreSQL username | `postgres` |
-| `POSTGRES_PASSWORD` | PostgreSQL password | `postgres` |
-| `POSTGRES_DB` | PostgreSQL database name | `data_intelligence_db` |
-| `DATABASE_URL` | Full async connection string | `postgresql+asyncpg://postgres:postgres@localhost:5432/data_intelligence_db` |
+| `SECRET_KEY` | Secret key for JWT signing | `supersecretkey_change_in_production...` |
+| `DATABASE_URL` | PostgreSQL async connection string | `postgresql+asyncpg://postgres:postgres@localhost:5432/data_intelligence_db` |
+| `REDIS_URL` | Redis URL for caching & coordination | `redis://localhost:6379/0` |
+| `CELERY_BROKER_URL` | Celery Redis broker URL | `redis://localhost:6379/1` |
+| `CELERY_RESULT_BACKEND` | Celery Redis result backend | `redis://localhost:6379/2` |
 | `AI_PROVIDER` | LLM provider (`gemini`, `groq`, `mock`) | `gemini` |
 | `GEMINI_API_KEY` | Google Gemini API Key | `AIza...` |
-| `GROQ_API_KEY` | Groq API Key | `gsk_...` |
-| `MAX_PLAN_SEARCH_QUERIES`| Maximum search queries generated per plan | `10` |
-| `MAX_PLAN_FIELDS` | Maximum field columns generated per plan | `25` |
+| `GEMINI_MODEL` | Google Gemini Model Identifier | `gemini-1.5-pro` |
+| `TAVILY_API_KEY` | Tavily Web Search API Key | `tvly-...` |
+| `FIRECRAWL_API_KEY` | Firecrawl Web Extraction API Key | `fc-...` |
+| `DATASET_MAX_RECORDS_FOR_SYNC` | Threshold for synchronous dataset processing | `5000` |
+| `DATASET_PROFILE_BATCH_SIZE` | Profiler batch chunk size | `1000` |
+| `DATASET_EXPORT_MAX_RECORDS` | Maximum export record limit | `100000` |
+| `EXPORT_STORAGE_DIR` | Local disk storage directory for exports & HTML reports | `./storage/exports` |
+| `EXPORT_FILE_RETENTION_HOURS` | Retention window for generated export files | `24` |
 | `VITE_API_BASE_URL` | Frontend API backend URL | `http://localhost:8000` |
-| `BACKEND_CORS_ORIGINS` | Comma-separated allowed CORS origins | `http://localhost:5173,http://localhost:3000` |
 
 ---
 
-## 📡 Collection Plan API Endpoints
+## 📡 Key API Endpoints (`/api/v1`)
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `POST` | `/api/v1/projects/{project_id}/plans/generate` | Run AI planner to generate structured collection plan from natural language |
-| `GET` | `/api/v1/projects/{project_id}/plans` | List all collection plans for a project |
-| `GET` | `/api/v1/plans/{plan_id}` | Get full details and schema of a specific plan |
-| `PATCH` | `/api/v1/plans/{plan_id}` | Update draft plan fields, search queries, target records, or metadata |
-| `POST` | `/api/v1/plans/{plan_id}/approve` | Approve plan (validates that no clarification questions are pending) |
-| `POST` | `/api/v1/plans/{plan_id}/reject` | Mark plan as rejected |
-| `POST` | `/api/v1/plans/{plan_id}/regenerate` | Re-run AI planner with user feedback or clarification answers |
+| **Phase 5: AI Insights & Analysis** | | |
+| `POST` | `/api/v1/datasets/{dataset_id}/analysis/chat` | Natural-language query -> Validated Pandas Plan -> Verified Answer + Chart |
+| `GET` | `/api/v1/datasets/{dataset_id}/analysis/history` | List conversational messages and analytical results |
+| `DELETE` | `/api/v1/datasets/{dataset_id}/analysis/history` | Clear analysis chat session history |
+| `POST` | `/api/v1/datasets/{dataset_id}/analysis/insights` | Run automated multi-dimensional scan (extremes, segments, outliers, correlations) |
+| `POST` | `/api/v1/datasets/{dataset_id}/analysis/statistics` | Comprehensive descriptive statistics and Pearson correlation matrix |
+| `POST` | `/api/v1/datasets/{dataset_id}/analysis/reports` | Generate and persist an executive HTML/JSON intelligence report |
+| `GET` | `/api/v1/datasets/{dataset_id}/analysis/reports` | List saved analysis reports for dataset |
+| `GET` | `/api/v1/datasets/{dataset_id}/analysis/reports/{report_id}/download` | Securely download generated standalone HTML report |
+| **Phase 4: Profiling & Quality** | | |
+| `POST` | `/api/v1/datasets/{dataset_id}/profile` | Profile dataset and generate 5-dimension quality score |
+| `GET` | `/api/v1/datasets/{dataset_id}/profile` | Get latest dataset profile and column statistics |
+| `GET` | `/api/v1/datasets/{dataset_id}/quality-report` | Get detailed quality dimension scores and rule explanations |
+| **Phase 4: Cleaning & Transformations** | | |
+| `POST` | `/api/v1/datasets/{dataset_id}/clean/preview` | Preview before/after diff for a cleaning operation |
+| `POST` | `/api/v1/datasets/{dataset_id}/clean/apply` | Apply cleaning operation with automatic version snapshot |
+| `POST` | `/api/v1/datasets/{dataset_id}/transformations/preview` | Preview derived column or transformation on sample rows |
+| `POST` | `/api/v1/datasets/{dataset_id}/transformations` | Execute transformation with safe AST allowlist |
+| `GET` | `/api/v1/datasets/{dataset_id}/transformations` | List transformation history and executed operations |
+| **Phase 4: Deduplication, Exports & Versions** | | |
+| `GET` | `/api/v1/datasets/{dataset_id}/duplicates` | Detect duplicate record clusters by URL, hash, or composite key |
+| `POST` | `/api/v1/datasets/{dataset_id}/duplicates/merge` | Merge duplicate cluster, retain winner, and preserve all source provenance |
+| `POST` | `/api/v1/datasets/{dataset_id}/exports` | Generate CSV, Excel (`.xlsx`), or JSON export with formula protection |
+| `GET` | `/api/v1/exports/{export_id}/download` | Securely download generated export workbook or file |
+| `GET` | `/api/v1/datasets/{dataset_id}/versions` | List dataset version snapshots and change log |
+| `POST` | `/api/v1/datasets/{dataset_id}/versions/{version_id}/restore` | Transactional rollback to a previous dataset version |
 
 ---
 
 ## 🚀 Quick Start with Docker Compose
-
-To start the entire platform (PostgreSQL, FastAPI backend with auto-migrations, and React frontend) with a single command:
 
 ```bash
 docker-compose up --build
@@ -176,7 +252,10 @@ docker-compose up --build
 
 ## 💻 Local Development Setup (Without Docker)
 
-### 1. Backend Setup
+### 1. Prerequisites
+Ensure **PostgreSQL** (port 5432) and **Redis** (port 6379) are running locally.
+
+### 2. Backend Setup
 
 ```bash
 cd backend
@@ -189,17 +268,25 @@ python -m venv venv
 # On Linux/macOS:
 source venv/bin/activate
 
-# Install dependencies
+# Install dependencies (FastAPI, Pandas, openpyxl, Celery, LangGraph)
 pip install -r requirements.txt
 
-# Run Alembic migrations (with Postgres running or configured)
+# Run Alembic migrations (001 -> 005)
 alembic upgrade head
 
 # Start FastAPI development server
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-### 2. Frontend Setup
+### 3. Start Celery Worker (In a separate terminal)
+
+```bash
+cd backend
+.\venv\Scripts\Activate.ps1
+celery -A app.core.celery_app.celery_app worker --loglevel=info --concurrency=3
+```
+
+### 4. Frontend Setup
 
 ```bash
 cd frontend
@@ -215,24 +302,23 @@ Visit [http://localhost:5173](http://localhost:5173).
 
 ---
 
-## 🧪 Testing
+## 🧪 Automated Testing
 
 ### Backend Tests (Pytest)
-Run the 25 comprehensive async integration, AI planner, and multi-tenant isolation tests:
+Run the full automated test suite (48 comprehensive async integration, AI analysis, query execution, statistics, data quality, cleaning, transformations, export, and security tests):
 
 ```bash
 cd backend
 .\venv\Scripts\pytest.exe -v
 ```
 
-**Test Coverage Highlights**:
-- **AI Plan Generation**: Tests structured JSON extraction, field schema creation, and search query compilation.
-- **Ambiguity & Clarifications**: Validates that vague inputs trigger `needs_clarification` status and clarification question generation.
-- **Approval Validation Rule**: Enforces that plans cannot be approved while unresolved clarification questions remain.
-- **Plan Modifications**: Tests editing field schemas, search queries, and metadata.
-- **Feedback & Regeneration**: Tests re-prompting the AI graph with user feedback.
-- **Strict Multi-Tenant Isolation**: Verified that User B cannot access, read, update, or approve User A's collection plans, projects, or datasets.
-- **User Authentication & Auth Security**: Full Argon2 hashing, JWT verification, and protected route authorization.
+**Test Suite Coverage (48/48 passing)**:
+- **AI Query Planner & Validator**: Validates NLP translation, schema mapping, allowlist operation filters, limit clamping, and injection rejection.
+- **Analytical Query Executor**: Verifies pure Pandas aggregations, group-bys, filtering, IQR outlier detection, Pearson correlations, and distributions.
+- **Automated Insights & Statistics Engine**: Tests multi-dimensional insight generation and full descriptive statistical profiling.
+- **Chat Query Flow & Report Generation**: Tests end-to-end question-to-answer workflow, chat history persistence, and standalone HTML report building.
+- **Multi-Tenant Isolation**: Rigorously verifies that User B cannot query, inspect, view history, or download reports for User A's datasets.
+- **Dataset Profiling, Cleaning, Transformations & Deduplication**: Complete test suite for Phase 1-4 capabilities.
 
 ### Frontend Build & Typecheck
 ```bash
@@ -242,20 +328,12 @@ npm run build
 
 ---
 
-## 🔒 Security & Quality Features Implemented
+## 🔒 Security & Data Integrity Highlights
 
-1. **Password Hashing**: State-of-the-art Argon2id hashing with unique salting. Plaintext passwords are never stored or returned.
-2. **JWT Security**: Strict HS256 JWT tokens with expiration claims and subject validation.
-3. **Multi-Tenant Isolation**: Every database query is scoped by `user_id`. Attempting to access another user's project, dataset, or plan yields a strict `404 Not Found`.
-4. **Foreign Key Integrity & Cascades**: Deleting a project automatically cascades to its plans, datasets, and workflow runs safely.
-5. **Bounded AI Planning**: AI outputs are strictly structured and bounded by schema limits to prevent prompt injection and model hallucinations.
-6. **Graceful Provider Fallback**: Automatic failover to mock provider if API keys are missing or unconfigured.
-
----
-
-## 🧭 Phase 3 Readiness
-
-This Phase 2 architecture is prepared for **Phase 3: Autonomous Web Collection & Extraction Engine**:
-- Approved `CollectionPlan` objects contain structured `fields`, `search_queries`, `source_recommendations`, and `quality_rules`.
-- In Phase 3, collection workers will read approved plans, execute search queries across web search APIs (Tavily, Firecrawl, Serper), extract content using LLM extractors against the plan's `FieldDefinition` schema, apply deduplication rules, and persist structured rows into `Dataset` records.
-
+1. **Zero Hallucination Guarantee**: Answers to numerical questions are strictly computed using verified Pandas analytical routines over actual stored database records. The LLM is used solely to formulate structured query plans and explain calculated findings.
+2. **Strict Query Sandbox (No `eval`/`exec`)**: The system rejects arbitrary Python execution. All operations are restricted to an explicit allowlist (`count`, `sum`, `mean`, `median`, `min`, `max`, `group_by`, `sort_limit`, `filter`, `outlier_detection`, `correlation`, `distribution`, `missing_analysis`).
+3. **CSV Formula Injection Mitigation**: All spreadsheet exports inspect cells starting with `=`, `+`, `-`, `@`, `\t`, or `\r` and prefix them with `'` to neutralize remote command execution vulnerabilities.
+4. **Safe Transformation Sandbox**: Derived column expressions are parsed into restricted AST operation trees with strict type checking.
+5. **Non-Destructive Provenance Merging**: When duplicate records are merged, source references and verbatim evidence quotes from all duplicate records are preserved.
+6. **Transactional Rollback Ledger**: Modifications automatically generate an immutable snapshot in `DatasetVersions` before writing changes.
+7. **Multi-Tenant Isolation**: All datasets, analysis sessions, query results, exports, and reports enforce strict project and user ownership validation with `404 Not Found` for unauthorized tenants.

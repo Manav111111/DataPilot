@@ -8,12 +8,20 @@ db_url = settings.get_database_url()
 connect_args = {}
 if "sqlite" in db_url:
     connect_args["check_same_thread"] = False
+else:
+    # Supabase PostgreSQL & Connection Poolers (PgBouncer/Supavisor):
+    # Disable statement caching to allow seamless connection via Supabase Session and Transaction poolers
+    connect_args["statement_cache_size"] = 0
+    # Enable SSL for remote/cloud PostgreSQL (Supabase, AWS RDS, etc.) when not connecting locally
+    if "localhost" not in db_url and "127.0.0.1" not in db_url:
+        connect_args["ssl"] = "require"
 
 engine = create_async_engine(
     db_url,
     echo=False,
     future=True,
     pool_pre_ping=True,
+    pool_recycle=300,  # Recycle connections every 5 minutes for cloud resilience
     connect_args=connect_args,
 )
 

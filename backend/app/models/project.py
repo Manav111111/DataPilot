@@ -37,6 +37,9 @@ class Project(Base):
     collection_plans = relationship(
         "CollectionPlan", back_populates="project", cascade="all, delete-orphan"
     )
+    collection_jobs = relationship(
+        "CollectionJob", back_populates="project", cascade="all, delete-orphan"
+    )
 
     __table_args__ = (
         Index("ix_projects_user_id_status", "user_id", "status"),

@@ -3,5 +3,14 @@ from app.services.project_service import ProjectService
 from app.services.dataset_service import DatasetService
 from app.services.workflow_service import WorkflowService
 from app.services.plan_service import PlanService
+from app.services.collection_service import CollectionService
 
-__all__ = ["AuthService", "ProjectService", "DatasetService", "WorkflowService", "PlanService"]
+__all__ = [
+    "AuthService",
+    "ProjectService",
+    "DatasetService",
+    "WorkflowService",
+    "PlanService",
+    "CollectionService",
+]
+

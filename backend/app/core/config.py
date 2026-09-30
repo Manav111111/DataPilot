@@ -37,6 +37,34 @@ class Settings(BaseSettings):
     AI_PLANNING_MAX_FIELDS: int = 40
     AI_PLANNING_MAX_RECORDS: int = 10000
 
+    # Phase 3: Search & Extraction Services
+    TAVILY_API_KEY: str = ""
+    FIRECRAWL_API_KEY: str = ""
+
+    # Phase 3: Redis & Celery Background Processing
+    REDIS_URL: str = "redis://localhost:6379/0"
+    CELERY_BROKER_URL: str = "redis://localhost:6379/1"
+    CELERY_RESULT_BACKEND: str = "redis://localhost:6379/2"
+
+    # Phase 3: Collection Engine Limits
+    COLLECTION_MAX_QUERIES: int = 15
+    COLLECTION_MAX_RESULTS_PER_QUERY: int = 10
+    COLLECTION_MAX_SOURCES_PER_JOB: int = 100
+    COLLECTION_MAX_RECORDS_PER_JOB: int = 1000
+    COLLECTION_MAX_RETRIES: int = 3
+    COLLECTION_CONCURRENCY: int = 3
+    COLLECTION_REQUEST_TIMEOUT_SECONDS: int = 60
+    COLLECTION_MAX_CONTENT_LENGTH: int = 50000
+
+    # Phase 4: Dataset Processing & Export Storage
+    DATASET_MAX_RECORDS_FOR_SYNC: int = 5000
+    DATASET_PROFILE_BATCH_SIZE: int = 1000
+    DATASET_EXPORT_MAX_RECORDS: int = 100000
+    DATASET_EXPORT_MAX_FILE_SIZE_MB: int = 100
+    DATASET_VERSIONING_ENABLED: bool = True
+    EXPORT_STORAGE_DIR: str = "./storage/exports"
+    EXPORT_FILE_RETENTION_HOURS: int = 24
+
     # CORS
     BACKEND_CORS_ORIGINS: Union[List[str], str] = [
         "http://localhost:5173",
@@ -55,22 +83,54 @@ class Settings(BaseSettings):
         raise ValueError(v)
 
     def get_database_url(self) -> str:
-        if self.DATABASE_URL:
-            # Convert standard postgres:// or postgresql:// to asyncpg if needed
-            url = self.DATABASE_URL
-            if url.startswith("postgres://"):
-                url = url.replace("postgres://", "postgresql+asyncpg://", 1)
-            elif url.startswith("postgresql://") and "+asyncpg" not in url:
-                url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
-            return url
-        return (
-            f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@"
-            f"{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
-        )
+        url = self.DATABASE_URL
+        if not url:
+            return (
+                f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@"
+                f"{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+            )
+
+        # Normalize and sanitize URL
+        import urllib.parse
+        clean_url = url.strip().strip("'\"")
+        parsed = urllib.parse.urlsplit(clean_url)
+        scheme = parsed.scheme.lower()
+
+        # Convert standard postgres schemes to asyncpg
+        if scheme in ("postgres", "postgresql"):
+            new_scheme = "postgresql+asyncpg"
+        elif scheme in ("postgresql+psycopg", "postgresql+psycopg2"):
+            new_scheme = "postgresql+asyncpg"
+        elif scheme == "sqlite":
+            new_scheme = "sqlite+aiosqlite"
+        else:
+            new_scheme = scheme
+
+        # Strip unsupported asyncpg query params (such as sslmode or channel_binding)
+        # asyncpg handles SSL via connection arguments (e.g., connect_args={"ssl": "require"})
+        query_params = urllib.parse.parse_qs(parsed.query, keep_blank_values=True)
+        query_params.pop("sslmode", None)
+        query_params.pop("channel_binding", None)
+
+        new_query = urllib.parse.urlencode(query_params, doseq=True) if query_params else ""
+        return urllib.parse.urlunsplit((new_scheme, parsed.netloc, parsed.path, new_query, parsed.fragment))
 
     def get_sync_database_url(self) -> str:
         async_url = self.get_database_url()
-        return async_url.replace("+asyncpg", "")
+        import urllib.parse
+        parsed = urllib.parse.urlsplit(async_url)
+        scheme = parsed.scheme.lower()
+
+        if "+asyncpg" in scheme:
+            new_scheme = scheme.replace("+asyncpg", "")
+        elif "+aiosqlite" in scheme:
+            new_scheme = scheme.replace("+aiosqlite", "")
+        elif scheme == "postgres":
+            new_scheme = "postgresql"
+        else:
+            new_scheme = scheme
+
+        return urllib.parse.urlunsplit((new_scheme, parsed.netloc, parsed.path, parsed.query, parsed.fragment))
 
     model_config = SettingsConfigDict(
         env_file=".env",
