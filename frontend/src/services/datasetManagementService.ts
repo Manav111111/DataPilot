@@ -216,8 +216,9 @@ export const datasetManagementService = {
   },
 
   getExportDownloadUrl(exportId: string): string {
-    const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
-    return `${baseURL}/api/v1/exports/${exportId}/download`;
+    const rawBaseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').trim().replace(/\/+$/, '');
+    const apiBase = rawBaseUrl.endsWith('/api/v1') ? rawBaseUrl : `${rawBaseUrl}/api/v1`;
+    return `${apiBase}/exports/${exportId}/download`;
   },
 
   // Versioning
