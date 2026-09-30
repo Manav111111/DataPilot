@@ -11,8 +11,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
 parts/
 sdist/
 var/
@@ -24,11 +22,16 @@ wheels/
 .coverage
 htmlcov/
 .env
+.env.local
 .venv
 venv/
 ENV/
 *.sqlite
 *.db
+
+# Explicitly ensure frontend lib directory is always tracked
+!frontend/src/lib/
+!frontend/src/lib/**
 
 # Node
 node_modules/
