@@ -42,7 +42,18 @@ export function LoginForm() {
       success('Welcome back! Signed in successfully.');
       navigate('/dashboard');
     } catch (err: any) {
-      const msg = err.response?.data?.detail || 'Invalid email or password';
+      let msg = 'Invalid email or password';
+      if (err.response?.data?.detail) {
+        if (typeof err.response.data.detail === 'string') {
+          msg = err.response.data.detail;
+        } else if (Array.isArray(err.response.data.detail)) {
+          msg = err.response.data.detail.map((e: any) => e.msg || e.message).join(', ');
+        }
+      } else if (err.message === 'Network Error' || !err.response) {
+        msg = 'Unable to connect to the backend server. Please check your backend URL or server status.';
+      } else if (err.message) {
+        msg = err.message;
+      }
       showError(msg);
     } finally {
       setIsLoading(false);

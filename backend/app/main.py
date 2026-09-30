@@ -34,16 +34,18 @@ app = FastAPI(
 )
 
 # CORS Configuration
+origins = []
 if settings.BACKEND_CORS_ORIGINS:
     origins = [str(origin).rstrip("/") for origin in settings.BACKEND_CORS_ORIGINS]
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=origins,
-        allow_origin_regex=r"^https:\/\/.*\.onrender\.com$",
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_origin_regex=r"^(https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?|https:\/\/.*\.vercel\.app|https:\/\/.*\.onrender\.com)$",
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # Exception Handlers
